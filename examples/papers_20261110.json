@@ -1,0 +1,467 @@
+{
+  "batch_date": "2026-11-10",
+  "homepage_title": "11.10｜📄 论文",
+  "intro_zh": "本次新增 10 篇近期具身智能论文，覆盖 VLA 模型、跨本体泛化、灵巧操作、人形运动控制、世界模型与工具使用数据等方向。本期特别推荐：DreamVLA 用生成人体动作 + 参考条件 DAgger 让人形 VLA 摆脱逐任务遥操作；SPARK-VLA 以约 53M 可训练参数在 LIBERO 达到 98.5%；BATCH 通过行为对齐把人类演示的 OOD 泛化平均提升 45%。",
+  "intro_short_zh": "本次新增 10 篇近期具身智能论文，覆盖 VLA 模型、跨本体泛化、灵巧操作、人形运动控制、世界模型与工具使用数据等方向。本期特别推荐 DreamVLA（生成动作 + 参考条件 DAgger）、SPARK-VLA（LIBERO 98.5%，仅约 53M 可训练参数）与 BATCH（OOD 泛化 +45%）。",
+  "highlights": [
+    {
+      "arxiv_id": "2611.10872",
+      "text": "用生成的人体动作轨迹引导仿真 RL，再用参考条件 DAgger 收集纠正轨迹；4 个 Unitree G1 任务成功率最高 69%，无需新任务遥操作。",
+      "link_text": "项目页",
+      "link_url": "https://ember-center-berkeley.github.io/DreamVLA/"
+    },
+    {
+      "arxiv_id": "2611.10443",
+      "text": "把冻结 3D 专家的空间理解蒸馏进 LoRA 视觉分支，并用动作损失梯度做知识路由；LIBERO 平均 98.5%，仅约 53M 可训练参数。",
+      "link_text": "代码",
+      "link_url": "https://github.com/park-jungin/spark-vla"
+    },
+    {
+      "arxiv_id": "2611.10894",
+      "text": "用几何标定 + 粗到细检索 + 流匹配推理引导做零样本 VLA 适配，真实世界成功率从 20% 提升到 80%。",
+      "link_text": "项目页",
+      "link_url": "https://raguvla.github.io"
+    },
+    {
+      "arxiv_id": "2611.10410",
+      "text": "单一物体中心奖励让双臂预抓取、换手与手内调整自发涌现，蒸馏后的单一策略真机 61/80（76.3%）成功。",
+      "link_text": "项目页",
+      "link_url": "https://simduoreal.github.io"
+    },
+    {
+      "arxiv_id": "2611.10148",
+      "text": "用循环一致性对齐人类与机器人行为，再做视频-动作扩散联合训练和风格迁移；OOD 策略性能比仅联合训练高 45%。",
+      "link_text": "项目页",
+      "link_url": "https://batch-embodiment.github.io/"
+    }
+  ],
+  "papers": [
+    {
+      "title": "DreamVLA: From Generated Human Motions to Humanoid Vision-Language-Action Policies",
+      "arxiv_id": "2611.10872",
+      "url": "https://arxiv.org/abs/2611.10872",
+      "date": "2026-11-07",
+      "venue": "arXiv 预印本",
+      "categories": [
+        "VLA模型",
+        "数据与生成",
+        "跨本体泛化"
+      ],
+      "summary": "用生成的人体动作轨迹引导仿真强化学习，再以参考条件 DAgger 蒸馏出人形 VLA 策略，无需为新任务采集遥操作数据。",
+      "org": "普林斯顿大学、加州大学伯克利分校",
+      "results": "在 4 个 Unitree G1 仿真任务上，3 轮参考条件 DAgger 将成功率提升到 Pick 54%、Drawer 60%、Button 69%、Walk-and-Pick 18%；同等 800 条普通离线轨迹仅 0%、51%、59%、0%。",
+      "data": "4 个 Unitree G1 仿真任务（平台抓取、开抽屉、按按钮、行走抓取）；每任务 100 次随机环境评估；初始专家轨迹 200 条，每轮追加 200 条纠正轨迹，3 轮共 800 条。",
+      "model": "DreamVLA：生成动作轨迹引导的 RL 专家 + 参考条件 DAgger 蒸馏的人形 VLA 策略；基于 GR00T 初始化。",
+      "code_url": "https://ember-center-berkeley.github.io/DreamVLA/",
+      "cover": "dreamvla",
+      "repo_category": "embodied-foundation-models",
+      "one_line_en": "Uses generated human motion trajectories to guide simulated RL, then distills a humanoid VLA policy with reference-conditioned DAgger, removing per-task teleoperation.",
+      "org_en": "Princeton University + UC Berkeley",
+      "repo_highlights": [
+        "<strong>Generated-motion → RL → VLA data loop</strong>: generated human motion trajectories serve as RL references, turning simulation successes into VLA training data without new task teleoperation",
+        "<strong>Reference-conditioned DAgger</strong>: after a failed rollout, restarts the RL expert from the learner state with the same reference suffix to collect corrective trajectories, addressing offline imitation's distribution shift",
+        "Validated on four Unitree G1 whole-body tasks, with ablations on DAgger rounds, residual RL, and generated data scale"
+      ],
+      "repo_results": [
+        "After 3 DAgger rounds: Pick <strong>54%</strong>, Drawer <strong>60%</strong>, Button <strong>69%</strong>, Walk-and-Pick <strong>18%</strong>",
+        "Matched 800 offline trajectories reach only <strong>0% / 51% / 59% / 0%</strong>, showing corrective data is key"
+      ],
+      "data_model_en": "4 Unitree G1 simulation tasks, 800 DAgger trajectories; DreamVLA (GR00T-initialized)",
+      "repo_highlights_zh": [
+        "<strong>生成动作 → RL → VLA 的数据闭环</strong>：用生成的人体动作轨迹作为 RL 参考，把仿真成功轨迹转成 VLA 训练数据，免去新任务遥操作",
+        "<strong>参考条件 DAgger</strong>：失败后从学习者状态重启 RL 专家并保留同一参考后缀，专门收集纠正轨迹，缓解离线模仿的分布偏移",
+        "在 Unitree G1 的 4 个全身任务上验证，并做了 DAgger 轮数、残差 RL 与数据规模消融"
+      ],
+      "repo_results_zh": [
+        "3 轮 DAgger 后成功率：Pick <strong>54%</strong>、Drawer <strong>60%</strong>、Button <strong>69%</strong>、Walk-and-Pick <strong>18%</strong>",
+        "同等 800 条普通离线轨迹仅 <strong>0% / 51% / 59% / 0%</strong>，说明纠正轨迹是关键"
+      ],
+      "data_model_zh": "4 个 Unitree G1 仿真任务、800 条 DAgger 轨迹；DreamVLA（GR00T 初始化）",
+      "cover_url": "https://arxiv.org/html/2611.10872v1/dreamvla-task-scenes.png"
+    },
+    {
+      "title": "Spatial Representation Distillation and Knowledge Routing for Vision-Language-Action Models",
+      "arxiv_id": "2611.10443",
+      "url": "https://arxiv.org/abs/2611.10443",
+      "date": "2026-11-07",
+      "venue": "NeurIPS 2026",
+      "categories": [
+        "VLA模型",
+        "空间智能"
+      ],
+      "summary": "把冻结 3D 专家的空间理解蒸馏进 LoRA 视觉分支，并用动作损失梯度监督的知识路由筛选视觉 token，无需推理时 3D 输入即可增强 VLA 空间感知。",
+      "org": "DGIST、延世大学、伦敦玛丽女王大学",
+      "results": "仅 0.5B 语言骨干、约 53M 可训练参数，LIBERO 平均成功率 98.5%，在 LIBERO-Plus、CALVIN 与真机操作上同样保持竞争力。",
+      "data": "LIBERO、LIBERO-Plus、CALVIN 与真机操作评测。",
+      "model": "SPARK-VLA：保留原视觉通路，新增 LoRA 空间分支 + 冻结 3D 专家注意力对齐 + 动作损失梯度监督的轻量知识路由；0.5B 语言骨干，约 53M 可训练参数。",
+      "code_url": "https://github.com/park-jungin/spark-vla",
+      "cover": "spark",
+      "repo_category": "embodied-foundation-models",
+      "one_line_en": "Distills a frozen 3D expert into a LoRA visual branch and routes only action-relevant visual tokens with action-loss-gradient supervision, adding spatial awareness without 3D inputs at inference.",
+      "org_en": "DGIST + Yonsei University + Queen Mary University of London",
+      "repo_highlights": [
+        "<strong>Preserve-specialize-route</strong>: keeps the pretrained VLM's original visual pathway, adding a LoRA spatial branch so 3D supervision does not overwrite 2D visual-semantic knowledge",
+        "<strong>Spatial representation distillation</strong>: aligns the spatial branch with a frozen 3D expert's attention responses, transferring 3D understanding without depth, point clouds, or a 3D expert at inference",
+        "<strong>Action-gradient knowledge routing</strong>: uses action-loss gradients as routing supervision, forwarding only action-relevant visual tokens to the language model"
+      ],
+      "repo_results": [
+        "LIBERO average success <strong>98.5%</strong> with only a <strong>0.5B</strong> language backbone and about <strong>53M</strong> trainable parameters",
+        "Remains competitive on LIBERO-Plus, CALVIN, and real-world manipulation; code is released"
+      ],
+      "data_model_en": "LIBERO / LIBERO-Plus / CALVIN + real-world manipulation; SPARK-VLA (0.5B language backbone, about 53M trainable parameters)",
+      "repo_highlights_zh": [
+        "<strong>preserve-specialize-route</strong>：保留预训练 VLM 的原始视觉通路，另开 LoRA 空间分支，避免 3D 监督破坏原有 2D 语义",
+        "<strong>空间表示蒸馏</strong>：用冻结 3D 专家的注意力响应监督空间分支，把 3D 理解迁移进 VLA，推理时不需要深度/点云/3D 专家",
+        "<strong>动作梯度知识路由</strong>：用动作损失梯度生成路由监督，只把与动作相关的视觉 token 送进语言模型，参数效率高"
+      ],
+      "repo_results_zh": [
+        "LIBERO 平均成功率 <strong>98.5%</strong>，仅 <strong>0.5B</strong> 语言骨干、约 <strong>53M</strong> 可训练参数",
+        "在 LIBERO-Plus、CALVIN 与真机操作上保持竞争力，代码已开源"
+      ],
+      "data_model_zh": "LIBERO / LIBERO-Plus / CALVIN + 真机；SPARK-VLA（0.5B 语言骨干，约 53M 可训练参数）",
+      "cover_url": "https://arxiv.org/html/2611.10443v1/model.png"
+    },
+    {
+      "title": "Zero-Shot VLA Adaptation with Retrieved Guidance",
+      "arxiv_id": "2611.10894",
+      "url": "https://arxiv.org/abs/2611.10894",
+      "date": "2026-11-07",
+      "venue": "arXiv 预印本",
+      "categories": [
+        "VLA模型",
+        "跨本体泛化",
+        "部署与加速"
+      ],
+      "summary": "用几何标定把域外演示变换到目标域，粗到细检索最兼容轨迹，并在流匹配推理中注入引导，实现无需重训的零样本 VLA 域/本体适配。",
+      "org": "宾夕法尼亚大学",
+      "results": "真实世界 VLA 成功率从 20% 提升到 80%；在仿真、sim-to-real 与跨本体人形操作上均优于最接近的基线。",
+      "data": "真实世界、仿真、sim-to-real 与跨本体人形操作四类评测；检索源为 DROID 等域外演示数据。",
+      "model": "RAGu：在 π0.5 流匹配 VLA 上加入几何标定、粗到细轨迹检索与推理期引导，不重训基座、不扩展上下文窗口。",
+      "code_url": "https://raguvla.github.io",
+      "cover": "ragu",
+      "repo_category": "embodied-foundation-models",
+      "one_line_en": "Warps out-of-domain demonstrations into the target setup, retrieves the most compatible trajectory coarse-to-fine, and steers flow-matching inference for zero-shot VLA domain/embodiment adaptation.",
+      "org_en": "University of Pennsylvania",
+      "repo_highlights": [
+        "<strong>Bringing RAG to robotics</strong>: retrieves trajectories from domain-mismatched, in-the-wild demonstrations such as DROID to guide a target-domain VLA instead of collecting more target data",
+        "<strong>Geometric calibration + coarse-to-fine retrieval</strong>: warps source demonstrations into the target camera/robot setup, then selects the trajectory most compatible with the base VLA",
+        "<strong>Inference-time flow-matching guidance</strong>: acts on the denoising/sampling process without retraining the base model or expanding its context window"
+      ],
+      "repo_results": [
+        "Real-world VLA success rises from <strong>20%</strong> to <strong>80%</strong>",
+        "Outperforms the closest baselines in simulation, sim-to-real transfer, and cross-embodiment humanoid manipulation"
+      ],
+      "data_model_en": "Real / simulation / sim-to-real / cross-embodiment humanoid evaluation; DROID and other out-of-domain demonstrations; RAGu (pi-0.5 flow-matching VLA + retrieval guidance)",
+      "repo_highlights_zh": [
+        "<strong>把 RAG 搬进机器人</strong>：从域外、in-the-wild 演示（如 DROID）检索轨迹来引导目标域 VLA，而不是继续堆目标域数据",
+        "<strong>几何标定 + 粗到细检索</strong>：先把源演示变换到目标相机/机器人配置，再从大量候选里选与基座 VLA 最兼容的轨迹",
+        "<strong>推理期流匹配引导</strong>：直接作用于去噪/流匹配采样过程，不改基座权重、不扩上下文窗口"
+      ],
+      "repo_results_zh": [
+        "真实世界 VLA 成功率 <strong>20% → 80%</strong>",
+        "在仿真、sim-to-real 与跨本体人形操作上优于最接近的基线"
+      ],
+      "data_model_zh": "真实/仿真/sim-to-real/跨本体人形评测，DROID 等域外演示；RAGu（π0.5 流匹配 VLA + 检索引导）",
+      "cover_url": "https://arxiv.org/html/2611.10894v1/figure1-RAGu_final.png"
+    },
+    {
+      "title": "SimDuoReal: Object-Centric Bimanual Policy for Emergent Dexterity",
+      "arxiv_id": "2611.10410",
+      "url": "https://arxiv.org/abs/2611.10410",
+      "date": "2026-11-07",
+      "venue": "arXiv 预印本",
+      "categories": [
+        "强化学习",
+        "运动与控制",
+        "模仿学习"
+      ],
+      "summary": "用单一物体中心奖励训练双臂 RL 专家，让预抓取、换手与手内调整等行为自发涌现，再经 DAgger/RL 蒸馏成可部署的单一双臂策略。",
+      "org": "Amazon FAR、加州大学圣地亚哥分校、芝加哥大学、卡内基梅隆大学、斯坦福大学",
+      "results": "真机 4 个任务、未见物体、无任务微调，单一策略 80 次试验成功 61 次（76.3%）；仿真条码扫描 85.0%，高于两个无换手单臂策略的 60.4%。",
+      "data": "仿真多环境 RL 专家 + 真机 4 任务 80 次试验；真机使用 3 台标定 RGB-D 相机与 VR 遥操作。",
+      "model": "SimDuoReal：共享物体中心奖励的 RL 专家 → 过渡状态精修 → DAgger + RL 蒸馏为单一双臂策略；物体表面/位姿中心表示。",
+      "code_url": "https://simduoreal.github.io",
+      "cover": "simduoreal",
+      "repo_category": "manipulation",
+      "one_line_en": "Trains bimanual RL experts under one object-centric reward so pre-grasp, regrasping, and handover emerge, then distills them into a single deployable policy with DAgger and RL.",
+      "org_en": "Amazon FAR + UC San Diego + University of Chicago + CMU + Stanford University",
+      "repo_highlights": [
+        "<strong>One object-centric reward</strong>: instead of hand-designing rewards per behavior, only the object's target pose is specified; pre-grasp manipulation, grasping, regrasping, and handover emerge",
+        "<strong>Experts → single-policy distillation</strong>: refines experts on transition states, then distills multiple behaviors into one deployable policy with DAgger and RL",
+        "<strong>Real-robot, no task-specific fine-tuning</strong>: the same policy runs four tasks with unseen objects"
+      ],
+      "repo_results": [
+        "Real hardware: <strong>61/80 = 76.3%</strong> across four tasks with unseen objects and no task-specific fine-tuning",
+        "Simulated barcode scanning: <strong>85.0%</strong> vs <strong>60.4%</strong> for two single-arm policies without handover"
+      ],
+      "data_model_en": "Multi-environment simulated RL + 80 real-robot trials; SimDuoReal (object-centric representation + distilled policy)",
+      "repo_highlights_zh": [
+        "<strong>单一物体中心奖励</strong>：不为每种行为手工设计奖励，只指定物体应达到的位姿，预抓取/抓取/换手/手内调整自发出现",
+        "<strong>专家 → 单一策略蒸馏</strong>：先在过渡状态精修专家，再用 DAgger + RL 把多种行为蒸馏进一个可部署策略",
+        "<strong>真机零任务微调</strong>：同一策略在 4 个任务、未见物体上直接执行"
+      ],
+      "repo_results_zh": [
+        "真机 <strong>61/80 = 76.3%</strong>，4 个任务、未见物体、无任务微调",
+        "仿真条码扫描 <strong>85.0%</strong>，对比两个无换手单臂策略 <strong>60.4%</strong>"
+      ],
+      "data_model_zh": "多环境仿真 RL + 真机 80 次试验；SimDuoReal（物体中心表示 + 蒸馏策略）",
+      "cover_url": "https://arxiv.org/html/2611.10410v1/system_overview_1.png"
+    },
+    {
+      "title": "GUARD: Anomaly-Informed Q-Steering for Generative Robot Policies in Dexterous Manipulation",
+      "arxiv_id": "2611.10343",
+      "url": "https://arxiv.org/abs/2611.10343",
+      "date": "2026-11-07",
+      "venue": "arXiv 预印本",
+      "categories": [
+        "强化学习",
+        "运动与控制",
+        "部署与加速"
+      ],
+      "summary": "把策略训练分布上的异常分数与稀疏任务奖励一起学进 Q 函数，用梯度在去噪过程中引导生成式策略避开低支持区域，无需改策略权重。",
+      "org": "本田美国研究院（Honda Research Institute USA）、斯坦福大学",
+      "results": "4 个 Adroit 灵巧操作任务平均成功率 96.0%（标称）/80.0%（扰动动力学），比最强基线高 21.0/20.0 个百分点；真机手内螺丝刀旋转/重定向分别提升 40/25 个百分点。",
+      "data": "Adroit 4 个灵巧操作任务（标称 + 扰动动力学）；真机手内螺丝刀旋转与重定向。",
+      "model": "GUARD：预训练扩散/流匹配策略 + 由策略训练数据学习的稠密异常分数 + 稀疏任务奖励，共同传播进 Q 函数，测试时对去噪过程做 Q 梯度引导。",
+      "code_url": "",
+      "cover": "guard",
+      "repo_category": "manipulation",
+      "one_line_en": "Learns dense anomaly scores from the policy's training distribution and propagates them with sparse task rewards through a Q-function, steering denoising away from low-support regions without changing policy weights.",
+      "org_en": "Honda Research Institute USA + Stanford University",
+      "repo_highlights": [
+        "<strong>Anomaly scores as dense supervision</strong>: learns a dense, failure-anticipatory anomaly score from the policy's training distribution and combines it with sparse task rewards in a learned Q-function",
+        "<strong>Test-time Q-steering</strong>: gradients steer denoising only; the pretrained policy is untouched, with no extra demonstrations, fine-tuning, or human intervention",
+        "<strong>Nominal and perturbed robustness</strong>: evaluates all four Adroit tasks under both nominal and perturbed dynamics, plus real-robot sim-to-real"
+      ],
+      "repo_results": [
+        "Adroit average success <strong>96.0%</strong> nominal / <strong>80.0%</strong> perturbed, beating the strongest baseline by <strong>21.0 / 20.0</strong> points",
+        "Real-robot in-hand screwdriver rotation and reorientation gain <strong>40 / 25</strong> points"
+      ],
+      "data_model_en": "4 Adroit tasks + real-robot in-hand manipulation; GUARD (anomaly scores + Q-steering)",
+      "repo_highlights_zh": [
+        "<strong>异常分数当稠密监督</strong>：从策略训练分布学习稠密异常分数，和稀疏任务奖励一起传播进 Q 函数，提前预判失败",
+        "<strong>测试时 Q 引导</strong>：梯度只作用于去噪采样，不修改预训练策略，也不需要额外演示/微调/人工干预",
+        "<strong>标称与扰动都稳</strong>：在 Adroit 4 任务上同时评估标称和扰动动力学，并做真机 sim-to-real"
+      ],
+      "repo_results_zh": [
+        "Adroit 平均成功率 <strong>96.0%</strong>（标称）/ <strong>80.0%</strong>（扰动），比最强基线高 <strong>21.0 / 20.0</strong> 个百分点",
+        "真机手内螺丝刀旋转/重定向分别提升 <strong>40 / 25</strong> 个百分点"
+      ],
+      "data_model_zh": "Adroit 4 任务 + 真机手内操作；GUARD（异常分数 + Q 引导）",
+      "cover_url": "https://arxiv.org/html/2611.10343v1/figs/teaser_figure_v6.png"
+    },
+    {
+      "title": "BATCH: Behavior Alignment for Cross-Embodiment Learning from Humans",
+      "arxiv_id": "2611.10148",
+      "url": "https://arxiv.org/abs/2611.10148",
+      "date": "2026-11-06",
+      "venue": "arXiv 预印本",
+      "categories": [
+        "跨本体泛化",
+        "模仿学习",
+        "数据与生成"
+      ],
+      "summary": "用循环一致性自监督学习人类与机器人的时序对应，再把对齐后的行为用于视频-动作扩散模型的联合训练与人→机器人风格迁移。",
+      "org": "斯坦福大学",
+      "results": "在 2 个真实操作任务的分布外设置上，平均比仅联合训练高 45%，比只用机器人数据预训练高 138%；去掉行为对齐后性能明显下降。",
+      "data": "人类演示（含 ego 视频）+ 机器人遥操作数据；Object in Container 与 Cup on Saucer 两个真实任务，ID/OOD 分开评测。",
+      "model": "BATCH：GTCC 时序表示 + DTW 对齐 + 自回归视频-动作扩散模型；行为对齐联合训练 + 人→机器人风格迁移。",
+      "code_url": "https://batch-embodiment.github.io/",
+      "cover": "batch",
+      "repo_category": "manipulation",
+      "one_line_en": "Learns self-supervised temporal correspondences between human and robot behaviors with cycle consistency, then uses the aligned pairs for video-action diffusion co-training and human-to-robot style transfer.",
+      "org_en": "Stanford University",
+      "repo_highlights": [
+        "<strong>Behavior alignment, not pixel alignment</strong>: cycle-consistency learns cross-embodiment temporal correspondences without manual annotation",
+        "<strong>Two training objectives</strong>: behavior-aligned co-training plus human-to-robot style transfer explicitly exploit the learned correspondences",
+        "<strong>OOD generalization</strong>: evaluated on unseen backgrounds, objects, distractors, and environments"
+      ],
+      "repo_results": [
+        "Out-of-domain policy performance improves by <strong>45%</strong> on average over co-training alone and <strong>138%</strong> over the robot-only pretrained model",
+        "Removing behavior alignment substantially degrades performance; style transfer adds further gains"
+      ],
+      "data_model_en": "Human ego demonstrations + robot teleoperation; BATCH (GTCC + video-action diffusion)",
+      "repo_highlights_zh": [
+        "<strong>行为对齐而非像素对齐</strong>：用循环一致性学习跨本体时序对应，不需要人工标注配对",
+        "<strong>两个训练目标</strong>：对齐后的行为联合训练 + 人→机器人风格迁移，显式利用对应关系",
+        "<strong>OOD 泛化</strong>：在未见背景、物体、干扰物与环境中评测"
+      ],
+      "repo_results_zh": [
+        "OOD 策略性能平均比仅联合训练高 <strong>45%</strong>，比机器人单域预训练高 <strong>138%</strong>",
+        "去掉行为对齐后性能显著下降，风格迁移带来额外增益"
+      ],
+      "data_model_zh": "人类 ego 演示 + 机器人遥操作；BATCH（GTCC + 视频-动作扩散）",
+      "cover_url": "https://arxiv.org/html/2611.10148v1/teaser.png"
+    },
+    {
+      "title": "UniLatent: Cross-Embodiment Transfer via Latent Observation Alignment",
+      "arxiv_id": "2611.10061",
+      "url": "https://arxiv.org/abs/2611.10061",
+      "date": "2026-11-06",
+      "venue": "CoRL 2026",
+      "categories": [
+        "跨本体泛化",
+        "机器人基础模型",
+        "模仿学习"
+      ],
+      "summary": "在仿真中渲染成对的源/目标机器人观测，把源视觉编码器对齐到冻结的目标编码器，使源域策略无需像素翻译即可直接在目标机器人上运行。",
+      "org": "南加州大学、加州大学伯克利分校、斯坦福大学",
+      "results": "3 个仿真任务、2 种目标机械臂上零样本成功率最高 93%，平均超最强像素翻译基线 30 多个百分点；真机 xArm→Franka 每任务仅 10 条目标演示即达 27/30 成功。",
+      "data": "3 个仿真任务 + 2 种目标机械臂；真机 xArm→Franka 迁移，每任务 10 条目标演示。",
+      "model": "UniLatent：仿真配对渲染 + 源编码器对齐冻结目标编码器 + 潜空间策略；无像素级图像翻译。",
+      "code_url": "https://selina2023.github.io/unilatent/",
+      "cover": "unilatent",
+      "repo_category": "embodied-foundation-models",
+      "one_line_en": "Renders paired source/target robot observations in simulation and aligns a source encoder to a frozen target encoder, so a source-domain policy runs on the target robot without pixel translation.",
+      "org_en": "University of Southern California + UC Berkeley + Stanford University",
+      "repo_highlights": [
+        "<strong>Latent-space alignment</strong>: aligns source observations to a frozen target encoder instead of generating target-domain pixels, removing appearance and geometry gaps",
+        "<strong>Paired-render self-supervision</strong>: renders the same scene with source and target robots in simulation to construct alignment supervision",
+        "<strong>Few-shot real transfer</strong>: only 10 target demonstrations per task transfer an xArm policy to a Franka"
+      ],
+      "repo_results": [
+        "Up to <strong>93%</strong> zero-shot success in simulation, over <strong>30</strong> points above the strongest pixel-translation baseline on average",
+        "Real xArm-to-Franka: <strong>10</strong> demonstrations per task, <strong>27/30</strong> successful rollouts"
+      ],
+      "data_model_en": "3 simulation tasks + 2 target arms; real xArm-to-Franka transfer; UniLatent (latent-aligned policy)",
+      "repo_highlights_zh": [
+        "<strong>潜空间对齐</strong>：不生成目标域像素图，直接把源观测编码对齐到目标编码器，消除外观/几何差异",
+        "<strong>配对渲染自监督</strong>：在仿真里渲染同一场景的源/目标机器人观测，构造对齐监督",
+        "<strong>少样本真机迁移</strong>：每任务仅 10 条目标演示即可把 xArm 策略迁到 Franka"
+      ],
+      "repo_results_zh": [
+        "仿真零样本成功率最高 <strong>93%</strong>，平均超最强像素翻译基线 <strong>30+</strong> 个百分点",
+        "真机 xArm→Franka：每任务 <strong>10</strong> 条演示，<strong>27/30</strong> 成功"
+      ],
+      "data_model_zh": "3 仿真任务 + 2 目标臂；真机 xArm→Franka；UniLatent（潜空间对齐策略）",
+      "cover_url": "https://arxiv.org/html/2611.10061v1/teaser_final.png"
+    },
+    {
+      "title": "MDF++: Visuo-Tactile World Action Model with End-to-end Representation Learning",
+      "arxiv_id": "2611.09293",
+      "url": "https://arxiv.org/abs/2611.09293",
+      "date": "2026-11-06",
+      "venue": "CoRL 2026",
+      "categories": [
+        "世界模型",
+        "感知与多模态",
+        "模仿学习"
+      ],
+      "summary": "用扩散骨干端到端学习视觉-触觉世界动作模型的表征，并通过多任务查询避免联合训练的表征坍缩，提升接触丰富操作。",
+      "org": "密歇根大学安娜堡分校",
+      "results": "5 个仿真视触觉任务平均成功率 86.9%，比适配后的 MDF 高 18.5 个百分点，比冻结预训练表征的 WAM 最高高 50%；真机完成螺栓拧紧与螺母对位。",
+      "data": "5 个仿真视触觉任务（每任务 150 次试验）+ 真机螺栓拧紧/螺母对位；GelSight Mini 触觉 + 腕部 RealSense。",
+      "model": "MDF++：视觉/触觉编码器与潜在扩散世界动作模型端到端联合训练；结构化策略/世界动作/前向/逆向动力学多任务查询。",
+      "code_url": "https://jointmdf.github.io",
+      "cover": "mdf",
+      "repo_category": "manipulation",
+      "one_line_en": "Learns visuo-tactile world-action representations end-to-end with a diffusion backbone, using multi-task queries to avoid feature collapse in contact-rich manipulation.",
+      "org_en": "University of Michigan, Ann Arbor",
+      "repo_highlights": [
+        "<strong>End-to-end visuo-tactile representations</strong>: no frozen reconstruction-pretrained encoders; encoders are learned for control",
+        "<strong>Multi-task queries prevent collapse</strong>: policy, world-action, forward-dynamics, and inverse-dynamics queries exploit cross-modal correlations",
+        "<strong>Real contact-rich tasks</strong>: bolt screwing and nut mating on a real car engine"
+      ],
+      "repo_results": [
+        "Five simulated tasks average <strong>86.9%</strong>, <strong>+18.5</strong> points over adapted MDF and up to <strong>+50%</strong> over frozen-representation WAMs",
+        "Real-robot bolt screwing and nut mating completed"
+      ],
+      "data_model_en": "5 simulated visuo-tactile tasks + real robot; MDF++ (end-to-end visuo-tactile WAM)",
+      "repo_highlights_zh": [
+        "<strong>端到端视触觉表征</strong>：不再冻结重建预训练编码器，让编码器直接为控制服务",
+        "<strong>多任务查询防坍缩</strong>：用策略、世界动作、前向/逆向动力学等结构化查询，利用跨模态相关性学习任务相关表征",
+        "<strong>真机接触任务</strong>：螺栓拧紧与螺母对位验证"
+      ],
+      "repo_results_zh": [
+        "5 个仿真任务平均 <strong>86.9%</strong>，比适配 MDF 高 <strong>18.5</strong> 个百分点，比冻结表征 WAM 最高高 <strong>50%</strong>",
+        "真机完成螺栓拧紧与螺母对位"
+      ],
+      "data_model_zh": "5 仿真任务 + 真机；MDF++（端到端视触觉 WAM）",
+      "cover_url": "https://arxiv.org/html/2611.09293v1/pull_fig.png"
+    },
+    {
+      "title": "STRIDE: Learning Humanoid Locomotion in Minutes with Acceleration-Based Rewards",
+      "arxiv_id": "2611.08857",
+      "url": "https://arxiv.org/abs/2611.08857",
+      "date": "2026-11-06",
+      "venue": "arXiv 预印本",
+      "categories": [
+        "运动与控制",
+        "强化学习"
+      ],
+      "summary": "用仅依赖机载 IMU 的加速度奖励替代基座速度跟踪，结合 XQC 离策略 RL、高增益关节控制与左右对称增强，让人形机器人几分钟内学会行走。",
+      "org": "达姆施塔特工业大学、德国机器人研究所（RIG）、德国人工智能研究中心（DFKI）、hessian.AI",
+      "results": "在 Unitree G1 与 Booster T1 上，仅用 14 分钟样本学会行走；相比无高增益/对称增强的设置，训练期摔倒减少 81%，后者需要 1 小时以上。",
+      "data": "Unitree G1 与 Booster T1 仿真训练；奖励只需机载 IMU，不依赖动作捕捉或外部状态估计。",
+      "model": "STRIDE：XQC 离策略 RL + 加速度跟踪奖励 + 高增益关节位置控制 + 左右对称数据增强。",
+      "code_url": "",
+      "cover": "stride",
+      "repo_category": "locomotion",
+      "one_line_en": "Replaces base-velocity tracking with an acceleration reward computable from the onboard IMU, combining XQC off-policy RL, high-gain joint control, and left-right symmetry augmentation to learn humanoid walking in minutes.",
+      "org_en": "Technical University of Darmstadt + Robotics Institute Germany (RIG) + DFKI + hessian.AI",
+      "repo_highlights": [
+        "<strong>Acceleration-based reward</strong>: no base-velocity tracking; the reward only needs the onboard IMU, avoiding mocap or a well-calibrated state estimator",
+        "<strong>Walking in 14 minutes</strong>: XQC plus high-gain joint control and left-right symmetry augmentation learns on Unitree G1 and Booster T1",
+        "<strong>81% fewer falls</strong>: compared with removing the two key components, which also needs over an hour"
+      ],
+      "repo_results": [
+        "Learns walking on Unitree G1 and Booster T1 within <strong>14 minutes</strong> of samples",
+        "Training falls reduced by <strong>81%</strong> vs the ablation; without these components learning takes over an hour"
+      ],
+      "data_model_en": "Unitree G1 / Booster T1 simulation; STRIDE (XQC + acceleration reward)",
+      "repo_highlights_zh": [
+        "<strong>加速度奖励</strong>：不跟踪基座速度，只要求跟随指令加速度，奖励可由机载 IMU 直接计算",
+        "<strong>14 分钟学会行走</strong>：XQC + 高增益关节控制 + 左右对称增强，在 G1/T1 上快速收敛",
+        "<strong>摔倒减少 81%</strong>：与去掉两个关键组件的版本相比"
+      ],
+      "repo_results_zh": [
+        "Unitree G1 / Booster T1 仅 <strong>14 分钟</strong>样本学会行走",
+        "训练期摔倒比消融设置减少 <strong>81%</strong>；无这两项组件需 <strong>1 小时以上</strong>"
+      ],
+      "data_model_zh": "G1/T1 仿真；STRIDE（XQC + 加速度奖励）",
+      "cover_url": "https://arxiv.org/html/2611.08857v1/figures/teaser.png"
+    },
+    {
+      "title": "ToolDex: An Ego-Exo Human Demonstration Dataset for Creative Physical Tool Use",
+      "arxiv_id": "2611.09036",
+      "url": "https://arxiv.org/abs/2611.09036",
+      "date": "2026-11-06",
+      "venue": "arXiv 预印本",
+      "categories": [
+        "数据与生成",
+        "感知与多模态"
+      ],
+      "summary": "面向“把日常物体当工具”的自我-外部视角人类演示数据集，提供多视角、手/工具/目标物体与形变交互标注，并配套三类基准。",
+      "org": "斯坦福大学、卡内基梅隆大学",
+      "results": "数据集含 60 小时、10,853 次试验、6,158,809 帧标注，采集吞吐约 60 次/小时；配套工具使用推理、稀疏视角 3D/4D 重建与机器人策略学习三类基准。",
+      "data": "60 小时 ego-exo 演示，10,853 次试验，6,158,809 帧；1 个 Apple Vision Pro + ZED Mini ego 相机 + 8 个 Intel RealSense RGB-D 外部相机；手/工具/目标物体/形变交互标注。",
+      "model": "ToolDex 数据集与基准（工具使用推理、稀疏视角 3D/4D 重建、机器人策略学习）；非单一模型。",
+      "code_url": "https://tooluse-dataset.github.io/",
+      "cover": "tooldex",
+      "repo_category": "datasets",
+      "one_line_en": "An ego-exo human demonstration dataset for repurposing everyday objects as tools, with multi-view observations, hand/tool/target annotations, and three benchmark suites.",
+      "org_en": "Stanford University + Carnegie Mellon University",
+      "repo_highlights": [
+        "<strong>Creative tool use</strong>: explicitly separates tool and target object roles, covering selection, adaptation, and repurposing behaviors",
+        "<strong>High-fidelity ego-exo capture</strong>: one ego camera plus eight synchronized exocentric RGB-D cameras with hand, object, and deformation annotations",
+        "<strong>Three benchmark suites</strong>: physical tool-use reasoning, sparse-view 3D/4D reconstruction, and robot policy learning"
+      ],
+      "repo_results": [
+        "<strong>60 hours</strong>, <strong>10,853</strong> trials, and <strong>6,158,809</strong> annotated frames at about <strong>60</strong> trials per hour",
+        "Establishes benchmarks for tool-use reasoning, 3D/4D reconstruction, and policy learning"
+      ],
+      "data_model_en": "ToolDex (ego-exo dataset + benchmarks)",
+      "repo_highlights_zh": [
+        "<strong>创意工具使用</strong>：明确区分工具与目标物体，覆盖选择、改造、替代使用等行为",
+        "<strong>高质量 ego-exo 采集</strong>：1 个 ego + 8 个 exo 同步相机，含手/物体/形变标注",
+        "<strong>三类基准</strong>：物理工具使用推理、稀疏视角 3D/4D 重建、机器人策略学习"
+      ],
+      "repo_results_zh": [
+        "<strong>60 小时</strong>、<strong>10,853</strong> 次试验、<strong>6,158,809</strong> 帧标注，约 <strong>60</strong> 次/小时",
+        "建立工具使用推理、3D/4D 重建与策略学习三类基准"
+      ],
+      "data_model_zh": "ToolDex（ego-exo 数据集 + 基准）",
+      "cover_url": "https://arxiv.org/html/2611.09036v1/tooldex_teaser.png"
+    }
+  ]
+}
