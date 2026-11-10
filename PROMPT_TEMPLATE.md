@@ -25,8 +25,10 @@
 ## 1. 准备
 
 ```bash
-rm -rf /tmp/feishu-paper-sync
-git clone --depth 1 https://github.com/Octoday-member0/feishu-paper-sync.git /tmp/feishu-paper-sync
+rm -rf /tmp/feishu-paper-sync /tmp/fps.tar.gz
+curl -fsSL https://codeload.github.com/Octoday-member0/feishu-paper-sync/tar.gz/refs/heads/main -o /tmp/fps.tar.gz
+mkdir -p /tmp/feishu-paper-sync
+tar -xzf /tmp/fps.tar.gz -C /tmp/feishu-paper-sync --strip-components=1
 cd /tmp/feishu-paper-sync
 export FEISHU_APP_ID='<FEISHU_APP_ID>'
 export FEISHU_APP_SECRET='<FEISHU_APP_SECRET>'
@@ -36,9 +38,11 @@ python3 feishu_paper_sync.py token
 
 如果 `token` 不是 `status=ok`，停止并报告错误，不要继续。
 
-**权限前置检查**：应用必须已是知识库/论文表/两个文档的「可编辑」协作者。若后续 `apply` 报 `91403` 或 `1770032`，立即停止，并输出下面这段给用户：
+**权限前置检查**：应用必须已是知识库/论文表/两个文档的「可编辑」协作者。若 `apply` 在论文表或论文页报 `91403` / `1770032`，立即停止，并输出下面这段给用户：
 
 > 应用还没有编辑权限。请打开知识库右上角「···」→ 添加协作者 → 搜索应用 `<FEISHU_APP_ID>` → 设为「可编辑」；论文汇总多维表格也同样添加。完成后回复我继续。
+
+如果只有**首页**报 `1770032`，不要整体停止，按第 4 步的「首页权限兜底」处理。
 
 ## 2. 选 10 篇最近的论文
 
