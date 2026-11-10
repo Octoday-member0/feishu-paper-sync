@@ -74,7 +74,7 @@ curl -sS --max-time 60 \
 
 ## 3. 生成批次文件
 
-在 `/tmp/feishu-paper-sync/data/` 下新建 `papers_<YYYYMMDD>.json`，结构严格按 `data/papers_20261110.json`。每篇必须包含：
+先 `mkdir -p /tmp/feishu-paper-sync/data`，再新建 `papers_<YYYYMMDD>.json`，结构严格按 `examples/papers_20261110.json`。每篇必须包含：
 
 - 飞书字段：`title`、`arxiv_id`、`url`、`date`、`venue`、`categories`、`summary`、`org`、`results`、`data`、`model`、`code_url`、`cover_url`
 - 仓库字段：`repo_category`、`one_line_en`、`org_en`、`repo_highlights`、`repo_results`、`data_model_en`、`repo_highlights_zh`、`repo_results_zh`、`data_model_zh`
