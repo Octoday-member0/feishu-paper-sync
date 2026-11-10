@@ -479,6 +479,7 @@ def apply_batch(fs: Feishu, batch: dict, skip_home: bool = False) -> dict:
         "homepage_updated": home_updated,
     }
     out = HERE / "data" / f"applied_{batch['batch_date']}.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"applied manifest -> {out}")
     return result
