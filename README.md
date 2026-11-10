@@ -80,6 +80,8 @@ git clone https://github.com/Octoday-member0/feishu-paper-sync.git
 cd feishu-paper-sync
 
 python3 feishu_paper_sync.py token
+mkdir -p data
+cp examples/papers_20261110.json data/
 python3 feishu_paper_sync.py preview --input data/papers_20261110.json
 python3 feishu_paper_sync.py apply   --input data/papers_20261110.json
 python3 feishu_paper_sync.py verify  --input data/papers_20261110.json
