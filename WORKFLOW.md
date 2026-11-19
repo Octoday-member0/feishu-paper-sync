@@ -59,7 +59,7 @@
 | 飞书论文表 | 320 → **330** 条，本批 +10（Z-sight / RoboMorpher / SHAPE / RoboTeam / LuxTac / ScaleVLA / ALOHA Lightning / HubEgo-100K / DexFormer 2.0 / MoViC），字段与封面完整 |
 | 论文研读页 | 导语 + 表格 10 行 + 5 条重点全部更新 ✅ |
 | 知识库首页 | ⚠️ `1770032 forBidden`（应用不是首页协作者），卡片仍为 `10.30｜📄 论文`；验收记录里如实标注「待 owner 授权」 |
-| Git | 生成 1 个 commit：`c4f107a`（作者 `Octoday-member0 <dev_intern@dexunit.com>`），只改 `topics/03-papers.md` + `topics/03-papers_EN.md`，各 +130 行；已开 PR：<https://github.com/Octoday-Hub/Embodied-AI/pull/29> |
+| Git | 生成 1 个 commit：`c4f107a`（作者 `Octoday-member0 <dev_intern@dexunit.com>`），只改 `topics/03-papers.md` + `topics/03-papers_EN.md`，各 +130 行；commit 保留在 fork 分支 `Octoday-member0/Embodied-AI:update/papers-20261119`（PR #29 已按需求撤回、未合并，分支可随时重新开 PR） |
 | 用时 | 约 40 分钟（含逐篇回 arXiv 核实、封面下载与核验） |
 
 首页权限补上之后，用提示词里第 7.4 节的「补首页模式」+ `/tmp/feishu_batch_<日期>.json` 即可补，不用重跑整批。
