@@ -24,10 +24,10 @@
 
 1. 飞书更新完成后，打开 [PROMPT-Git提交.md](PROMPT-Git提交.md)，同样 **Raw → 全选复制**；
 2. 粘贴给 Codex / DeepSeek Harness，发送；
-3. Agent 会从飞书论文表读「最近一批」论文，回 arXiv 补齐英文与特点，按 `Octoday-Hub/Embodied-AI` 既有格式插入中英两个论文页，**生成 1 个 commit**；
+3. Agent 会从飞书论文表读**还没入库的最近论文**（用 arXiv id 与仓库去重），回 arXiv 补齐英文与特点，按 `Octoday-Hub/Embodied-AI` 既有格式插入中英两个论文页，**生成 1 个 commit**；
 4. 默认只 commit 不推送；要 push / 开 PR 就在末尾加一句「推送」或「开 PR」。
 
-> 两段提示词可以连着用。第二段默认取飞书表里**最新一批**（日期最新的那组记录），不需要把论文数据贴来贴去；如果同一周跑了多批，把要入库的 arXiv id 列表直接贴在第二段提示词末尾即可。
+> 两段提示词可以连着用。第二段默认取飞书表里**还没进仓库的最近论文**（按 arXiv id 去重，同一批跨多天也能正确识别），不需要把论文数据贴来贴去；如果想只入库指定几篇，把 arXiv id 列表直接贴在第二段提示词末尾即可。
 
 ### 直接转给同事的一段话（可复制）
 
@@ -49,6 +49,20 @@
 - [ ] `topics/03-papers.md` 与 `topics/03-papers_EN.md` 各新增 N 条，中英 1:1；
 - [ ] 只有这两个文件被改动，且是**一个 commit**，作者 `Octoday-member0 <dev_intern@dexunit.com>`；
 - [ ] 没有直接 push 上游 `main`（要推送就推 `Octoday-member0/Embodied-AI` 的 `update/papers-<日期>` 分支）。
+
+---
+
+## 二·五、实测记录（2026-11-19，用本仓库两段提示词跑通）
+
+| 项目 | 结果 |
+|---|---|
+| 飞书论文表 | 320 → **330** 条，本批 +10（Z-sight / RoboMorpher / SHAPE / RoboTeam / LuxTac / ScaleVLA / ALOHA Lightning / HubEgo-100K / DexFormer 2.0 / MoViC），字段与封面完整 |
+| 论文研读页 | 导语 + 表格 10 行 + 5 条重点全部更新 ✅ |
+| 知识库首页 | ⚠️ `1770032 forBidden`（应用不是首页协作者），卡片仍为 `10.30｜📄 论文`；验收记录里如实标注「待 owner 授权」 |
+| Git | 生成 1 个 commit：`c4f107a`（作者 `Octoday-member0 <dev_intern@dexunit.com>`），只改 `topics/03-papers.md` + `topics/03-papers_EN.md`，各 +130 行；已开 PR：<https://github.com/Octoday-Hub/Embodied-AI/pull/29> |
+| 用时 | 约 40 分钟（含逐篇回 arXiv 核实、封面下载与核验） |
+
+首页权限补上之后，用提示词里第 7.4 节的「补首页模式」+ `/tmp/feishu_batch_<日期>.json` 即可补，不用重跑整批。
 
 ---
 
@@ -95,7 +109,7 @@
 | `99991672` | 应用缺 scope | owner 在飞书开放平台补权限 |
 | `99991663` | App Secret 错误 / token 失效 | 向 owner 重新确认 secret |
 | arXiv HTML 404 | 论文没有 HTML 版 | 用 abs 页 + PDF 核实 |
-| 第二段选错了批次 | 飞书表里同期有多批 | 在提示词末尾直接贴本批 arXiv id 列表 |
+| 第二段选多了 / 选少了 | 飞书表里同期有多批 | 正常会按 arXiv id 与仓库去重，不会重复入库；想精确控制就在提示词末尾贴本批 arXiv id 列表 |
 
 ---
 
