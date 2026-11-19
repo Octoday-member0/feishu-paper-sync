@@ -1,200 +1,112 @@
-# 论文同步 Workflow（可转发）
+# 论文同步 · 使用说明（两段提示词，复制粘贴即可）
 
-把 arXiv 最近论文同步到飞书知识库，并按仓库格式提交一个 PR。适合每周一次，10 篇/批。
+这个仓库**不是流程文档**，日常只需要两段提示词，复制粘贴给 AI 即可：
 
-## 角色分工（1 人也能全做）
+| 步骤 | 复制哪个文件 | 丢给谁 | 产出 |
+|---|---|---|---|
+| ① 更新飞书 | [PROMPT-飞书更新.md](PROMPT-飞书更新.md) | doubao work / DeepSeek Harness / Codex | 论文表 +10 条、论文研读页、知识库首页 |
+| ② 提交 Git | [PROMPT-Git提交.md](PROMPT-Git提交.md) | Codex / DeepSeek Harness | 按仓库格式的 1 个 commit |
 
-| 环节 | 谁做 | 产出 |
-|---|---|---|
-| 选题 + 核数 | 论文同学 / agent | 10 篇候选 + 关键数字 |
-| 飞书写入 | 有应用权限的同学 / agent | 论文表 + 论文研读页 + 首页 |
-| Git PR | 有 `Octoday-member0` PAT 的同学 / agent | 1 个 commit + 1 个 PR |
-| 验收 | 另一人交叉检查 | 验收清单 |
+不需要克隆仓库、不需要安装/运行任何脚本。
 
-关键原则：**选题的人不写数字，写数字的人必须回原文核对**。agent 可以全做，但人要抽查 2–3 篇。
+---
 
-## 一、一次性准备
+## 一、怎么用（发给同事的就是这段）
+
+### 第 1 步：更新飞书（一段提示词）
+
+1. 打开 [PROMPT-飞书更新.md](PROMPT-飞书更新.md)，点右上角 **Raw**（或 **Copy raw file**）后**全选复制**；
+2. 粘贴到 doubao work 或 DeepSeek Harness，发送；
+3. Agent 会先要一次性的 **App Secret**（向知识库 owner 要，见第三节），粘贴给它；
+4. 等它跑完，会输出「飞书更新」报告（论文表 +N 条、论文研读页、首页状态）。
+
+### 第 2 步：提交 Git（另一段提示词）
+
+1. 飞书更新完成后，打开 [PROMPT-Git提交.md](PROMPT-Git提交.md)，同样 **Raw → 全选复制**；
+2. 粘贴给 Codex / DeepSeek Harness，发送；
+3. Agent 会从飞书论文表读「最近一批」论文，回 arXiv 补齐英文与特点，按 `Octoday-Hub/Embodied-AI` 既有格式插入中英两个论文页，**生成 1 个 commit**；
+4. 默认只 commit 不推送；要 push / 开 PR 就在末尾加一句「推送」或「开 PR」。
+
+> 两段提示词可以连着用。第二段默认取飞书表里**最新一批**（日期最新的那组记录），不需要把论文数据贴来贴去；如果同一周跑了多批，把要入库的 arXiv id 列表直接贴在第二段提示词末尾即可。
+
+### 直接转给同事的一段话（可复制）
+
+> 帮忙做一下本周的论文同步：打开 https://github.com/Octoday-member0/feishu-paper-sync/blob/main/PROMPT-飞书更新.md ，把整段内容复制，粘到 doubao work 或 DeepSeek Harness 里发送。它会问你要飞书 App Secret（找我要）。跑完把报告发我。之后再用同仓库的 PROMPT-Git提交.md 跑一次 Git 提交。
+
+---
+
+## 二、验收标准（就是需求本身）
+
+第 1 步完成后，去飞书知识库检查：
+
+- [ ] **论文汇总多维表格**：新增 **10 条**最近一周的论文记录；标题 / 日期 / 类别 / 摘要 / 机构 / 会议 / 原文链接 / 实验结论 / 数据 / 模型字段完整，封面有图；
+- [ ] **论文研读页**：导语更新为本批说明（含「10 篇」），表格 10 行是本批新论文，5 条重点论文已更新；
+- [ ] **知识库首页**：「近期更新 → 📄 论文」卡片标题日期更新为本批日期，正文有「本次新增 10 篇近期具身智能论文」的介绍；
+- [ ] 同一 arXiv id 不重复入库，不删旧数据。
+
+第 2 步完成后检查：
+
+- [ ] `topics/03-papers.md` 与 `topics/03-papers_EN.md` 各新增 N 条，中英 1:1；
+- [ ] 只有这两个文件被改动，且是**一个 commit**，作者 `Octoday-member0 <dev_intern@dexunit.com>`；
+- [ ] 没有直接 push 上游 `main`（要推送就推 `Octoday-member0/Embodied-AI` 的 `update/papers-<日期>` 分支）。
+
+---
+
+## 三、一次性准备（owner 做一次即可）
 
 ### 1. 飞书应用权限
 
-应用需要：
+应用 `cli_aa63c8579579dbf1` 需要 scope：
 
-- `wiki:wiki:readonly`：读知识库
-- `docx:document`：读写两个文档
-- `bitable:app`：读写论文表
-- `drive:drive`：上传封面
+- `wiki:wiki:readonly`：读知识库；
+- `docx:document`：读写「论文研读」「知识库首页」两个文档；
+- `bitable:app`：读写论文汇总多维表格；
+- `drive:drive`：上传封面。
 
-并把应用加为以下位置的**可编辑协作者**：
+并把应用加为以下三处的**可编辑协作者**：
 
-1. 知识库首页
-2. 论文研读页
-3. 论文汇总多维表格
+1. 论文汇总多维表格；
+2. 论文研读页；
+3. 知识库首页。
 
-没有权限的典型报错：
+> ⚠️ **当前已知缺口（2026-11-19 核对）**：应用对论文表、论文研读页可编辑；对**知识库首页**返回 `1770032 forBidden`，首页论文卡片此前一直停留在 `10.30｜📄 论文`。需要首页 owner 打开首页文档 → 右上角「···」→ 添加协作者 → 搜索应用 ID `cli_aa63c8579579dbf1` → 设为「可编辑」。没有这一步，验收标准里的「首页有论文更新说明」无法达成（提示词会如实标注「⚠️ 待 owner 授权」，不会伪造）。
 
-- 论文表：`91403 Forbidden`
-- 文档：`1770032 forBidden`
-- 封面上传：`1061004 forbidden`
+### 2. App Secret 的分发
 
-> 首页文档可能属于另一位管理员，分享权限只给 `full_access`。如果首页加不进去，先做论文表 + 论文页，首页交给 owner 授权后补，**不要伪造“首页已更新”**。
+- App Secret **不写进本仓库**（仓库是 public 的），也不写进提示词；
+- 提示词运行时会主动向使用者索要；
+- 由 owner 通过内部渠道（飞书私聊等）发给要跑同步的同事，一次性配置即可。
 
-### 2. 凭证
+### 3. Git 侧（只影响第 2 步的推送）
 
-从内部渠道拿，不要写进 Git：
+- 只做本地 commit：不需要任何凭证；
+- 要 push / 开 PR：需要一个对 `Octoday-member0/Embodied-AI` 有写权限的 PAT，或用已登录 `gh` 的账号。
 
-```bash
-export FEISHU_APP_ID='<APP_ID>'
-export FEISHU_APP_SECRET='<APP_SECRET>'
-export GITHUB_TOKEN='<Octoday-member0 PAT>'
-```
+---
 
-### 3. 拉自动化仓库
+## 四、常见问题
 
-```bash
-rm -rf /tmp/feishu-paper-sync /tmp/fps.tar.gz
-curl -fsSL https://codeload.github.com/Octoday-member0/feishu-paper-sync/tar.gz/refs/heads/main -o /tmp/fps.tar.gz
-mkdir -p /tmp/feishu-paper-sync
-tar -xzf /tmp/fps.tar.gz -C /tmp/feishu-paper-sync --strip-components=1
-cd /tmp/feishu-paper-sync
-python3 feishu_paper_sync.py token
-```
-
-输出 `status=ok` 才继续。
-
-## 二、每次更新的 6 步
-
-### Step 1：拉候选
-
-```bash
-curl -sS --max-time 60 \
-  "https://export.arxiv.org/api/query?search_query=cat:cs.RO&start=0&max_results=80&sortBy=submittedDate&sortOrder=descending" \
-  -o /tmp/arxiv_ro.xml
-```
-
-选 **10 篇**，硬标准：
-
-- 首次提交在最近 7 天内，不是 revision
-- 与飞书已有记录不重复（标题规范化 + arXiv id 双重去重）
-- 方向覆盖：VLA / 操作 / 运动控制 / 世界模型 / 空间智能 / 跨本体 / 数据 / RL
-- 优先有项目页/代码、数字清楚、机构可核实
-- 不为凑数编造论文、作者、机构、指标、链接
-
-### Step 2：回原文核数
-
-每篇至少打开 arXiv abs + HTML 正文，核实：
-
-- 标题、arXiv id、首次提交日期、venue
-- 机构（作者区，不猜）
-- 一句话中文摘要
-- 2–4 个关键实验数字（必须能在摘要/表格找到）
-- 数据 / 模型 / 硬件
-- 代码或项目页
-- 封面图 URL（arXiv HTML 的 teaser / architecture 图）
-
-### Step 3：写批次 JSON
-
-```bash
-mkdir -p /tmp/feishu-paper-sync/data
-```
-
-新建 `data/papers_<YYYYMMDD>.json`，格式照 `examples/papers_20261110.json`。每篇要同时有：
-
-- 飞书字段：`title`、`arxiv_id`、`url`、`date`、`venue`、`categories`、`summary`、`org`、`results`、`data`、`model`、`code_url`、`cover_url`
-- 仓库字段：`repo_category`、`one_line_en`、`org_en`、`repo_highlights`、`repo_results`、`data_model_en`、`repo_highlights_zh`、`repo_results_zh`、`data_model_zh`
-
-顶层还要有：`batch_date`、`homepage_title`、`intro_zh`、`intro_short_zh`、`highlights`（5 条）。
-
-### Step 4：写飞书
-
-```bash
-cd /tmp/feishu-paper-sync
-python3 feishu_paper_sync.py preview --input data/papers_<YYYYMMDD>.json
-python3 feishu_paper_sync.py apply   --input data/papers_<YYYYMMDD>.json
-python3 feishu_paper_sync.py verify  --input data/papers_<YYYYMMDD>.json
-```
-
-`apply` 是幂等的：已存在的记录会跳过，文档和首页会刷新。
-
-首页无权限时：
-
-```bash
-python3 feishu_paper_sync.py apply --input data/papers_<YYYYMMDD>.json --skip-home
-python3 feishu_paper_sync.py verify --input data/papers_<YYYYMMDD>.json --skip-home
-# owner 授权后只补首页
-python3 feishu_paper_sync.py home --input data/papers_<YYYYMMDD>.json
-```
-
-### Step 5：Git PR
-
-```bash
-rm -rf /tmp/Embodied-AI /tmp/ea-papers
-git clone --depth 1 https://github.com/Octoday-Hub/Embodied-AI.git /tmp/Embodied-AI
-cd /tmp/Embodied-AI
-git fetch origin main
-git worktree add /tmp/ea-papers -b update/papers-<YYYYMMDD> origin/main
-```
-
-写 `/tmp/pr_body.md`（批次日期、10 篇论文表、改动文件、验收清单、飞书来源），然后：
-
-```bash
-cd /tmp/feishu-paper-sync
-export GITHUB_TOKEN='<Octoday-member0 PAT>'
-python3 feishu_to_git_pr.py \
-  --input data/papers_<YYYYMMDD>.json \
-  --repo /tmp/ea-papers \
-  --branch update/papers-<YYYYMMDD> \
-  --title "docs: 新增 10 篇 <YYYY-MM> 具身智能论文（飞书论文库同步）" \
-  --body-file /tmp/pr_body.md
-```
-
-脚本会：插入中英文六字段表格 → `git diff --check` → 以 `Octoday-member0` 提交 → push 到 `Octoday-member0/Embodied-AI` → 对 `Octoday-Hub/Embodied-AI:main` 开 PR。
-
-禁止：直接 push 上游 `main`、在上游建分支、提交 `.env`/token/临时文件。
-
-### Step 6：验收 + 报告
-
-```bash
-python3 feishu_paper_sync.py verify --input data/papers_<YYYYMMDD>.json
-```
-
-必须看到 `✅ 验收通过`。报告至少包含：
-
-- 飞书论文表：+N 条（record_id）
-- 论文研读页：导语/表格/重点
-- 首页：✅ 已更新 / ⚠️ 待 owner 授权
-- PR：URL、commit、改动文件
-- 本批论文表（标题 / arXiv / 方向 / 日期）
-
-## 三、验收清单
-
-- [ ] 10 篇都是最近 7 天首次提交，不是 revision
-- [ ] 与飞书、Git 仓库均无重复
-- [ ] 标题、日期、机构、数字能在原文找到
-- [ ] 飞书 10 条记录字段无空、封面有图
-- [ ] 论文页导语 + 10 行表 + 5 条重点
-- [ ] 首页卡片日期与新批次一致（或明确标注待授权）
-- [ ] 中英文条目 1:1，顺序、链接一致
-- [ ] PR 只有 `topics/03-papers.md` + `topics/03-papers_EN.md`
-- [ ] commit 作者是 `Octoday-member0 <dev_intern@dexunit.com>`
-- [ ] PR base 是 `Octoday-Hub/Embodied-AI:main`，不是直接 push
-
-## 四、常见错误
-
-| 报错 | 原因 | 处理 |
+| 现象 | 原因 | 处理 |
 |---|---|---|
-| `91403` | 应用不是论文表可编辑协作者 | 加表协作者 |
-| `1770032` | 应用不是文档可编辑协作者 | 加文档/首页协作者 |
-| `1061004` | 封面上传无权限 | 开 `drive:drive` + 表编辑 |
-| `99991672` | 应用缺 scope | 开放平台补权限 |
-| `99991663` | token 失效 | 重新 `token` |
-| `404` on arXiv HTML | 论文没有 HTML | 用 abs 页 + PDF |
-| PR `not mergeable` | 上游 main 已更新 | rebase 到最新 `origin/main` 再 push |
+| Agent 说没有命令/联网能力 | 所用 agent 不支持执行 shell / HTTP | 换 DeepSeek Harness / Codex 等能执行命令的 agent |
+| 论文表报 `91403` | 应用不是论文表可编辑协作者 | owner 把应用加为表「可编辑」 |
+| 论文页 / 首页报 `1770032` | 应用不是文档可编辑协作者 | 论文页找 owner 授权；首页见上文缺口说明 |
+| 封面失败 `1061004` | 上传无权限 | 跳过封面即可，非必填 |
+| `99991672` | 应用缺 scope | owner 在飞书开放平台补权限 |
+| `99991663` | App Secret 错误 / token 失效 | 向 owner 重新确认 secret |
+| arXiv HTML 404 | 论文没有 HTML 版 | 用 abs 页 + PDF 核实 |
+| 第二段选错了批次 | 飞书表里同期有多批 | 在提示词末尾直接贴本批 arXiv id 列表 |
 
-## 五、和 agent 的配合
+---
 
-给 agent 的完整提示词在 `PROMPT.md`（含凭证，仅内部转发）。  
-给同事的公开模板在 `PROMPT_TEMPLATE.md`（占位符，可放公开仓库）。
+## 五、仓库里的其它文件
 
-一句话版本：
+| 文件 | 用途 |
+|---|---|
+| `PROMPT-飞书更新.md` | 一段复制即用的飞书更新提示词 |
+| `PROMPT-Git提交.md` | 一段复制即用的 Git 论文入库提示词 |
+| `examples/papers_20261110.json` | 2026-11-10 批次的完整数据，字段样例参考 |
+| `feishu_paper_sync.py` / `feishu_to_git_pr.py` | 维护者用的脚本路径（可选，日常不需要） |
+| `MAINTAINER.md` | 维护者手册：脚本用法、批次 JSON 格式、排错 |
 
-> 按 `WORKFLOW.md` 走：选 10 篇最近 cs.RO → 回原文核数 → 写 `papers_<日期>.json` → `preview/apply/verify` → `feishu_to_git_pr.py` 开 PR → 按验收清单报告。首页无权限时 `--skip-home`，owner 授权后 `home` 补，不许写成已更新。
+> 仓库是 public 的：提示词里只有 app_id、app_token、table_id、doc_token 这些资源标识，**没有** App Secret、没有 GitHub PAT。App Secret 只在运行时由使用者粘贴。
